@@ -155,7 +155,7 @@ def backTrackingSearch( boardState ):
     var = heapq.heappop( boardState.variables )
 
     for value in var.remainingValues:
-        makeMove(var, boardState)
+        makeMove(var, boardState, value)
 
         if backTrackingSearch( boardState ):
             return True
@@ -168,8 +168,8 @@ def backTrackingSearch( boardState ):
 
 
 # make move on sudoku puzzle
-def makeMove(var, boardState):
-    boardState.board[var.coords[0]][var.coords[1]] = var.remainingValues[0]
+def makeMove(var, boardState, value):
+    boardState.board[var.coords[0]][var.coords[1]] = value
     boardState.updateVars()
 # makeMove()
 
