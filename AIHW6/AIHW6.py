@@ -91,6 +91,26 @@ class sudokuVariable(object):
 
 
 def main():
+    # board 1
+    print( "\nBoard 1:")
+    board = boardState(sudokuBoard1)
+    printBoard(board.board)
+
+    start_time = time.time()
+    result = backTrackingSearch( board )
+    end_time = time.time() - start_time
+    end_time *= 1000                # Convert time in seconds to milliseconds
+
+    if result:
+        print( "\nBoard 1 solution:")
+        printBoard(board.board)
+    else:
+        print("\nCould not find solution!\n")
+
+    print("\nCPU execution time: " + str(end_time) + " ms")
+
+    # board 2
+    print( "\nBoard 2:")
     board = boardState(sudokuBoard2)
     printBoard(board.board)
 
@@ -100,9 +120,28 @@ def main():
     end_time *= 1000                # Convert time in seconds to milliseconds
 
     if result:
+        print( "\nBoard 2 solution:")
         printBoard(board.board)
     else:
-        print("\nCould not find solution!\n")
+        print("\nCould not find solution!")
+
+    print("\nCPU execution time: " + str(end_time) + " ms")
+
+    # board 3
+    print( "\nBoard 3:")
+    board = boardState(sudokuBoard3)
+    printBoard(board.board)
+
+    start_time = time.time()
+    result = backTrackingSearch( board )
+    end_time = time.time() - start_time
+    end_time *= 1000                # Convert time in seconds to milliseconds
+
+    if result:
+        print( "\nBoard 3 solution:")
+        printBoard(board.board)
+    else:
+        print("\nCould not find solution!")
 
     print("\nCPU execution time: " + str(end_time) + " ms")
 # main()
