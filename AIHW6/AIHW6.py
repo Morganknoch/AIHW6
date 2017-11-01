@@ -6,8 +6,7 @@ import copy
 import heapq
 
 # sudokuBoard[row][column]
-
-sudokuBoard = [[' ',' ','1',   ' ',' ','2',   ' ',' ',' '],
+sudokuBoard1 = [[' ',' ','1',   ' ',' ','2',   ' ',' ',' '],
                [' ',' ','5',   ' ',' ','6',   ' ','3',' '],
                ['4','6',' ',   ' ',' ','5',   ' ',' ',' '],
 
@@ -19,6 +18,7 @@ sudokuBoard = [[' ',' ','1',   ' ',' ','2',   ' ',' ',' '],
                ['1',' ',' ',   '3','2',' ',   ' ',' ',' '],
                [' ',' ','9',   ' ',' ',' ',   '3',' ',' ']]
 
+# the starting domain for each variable
 domain = ('1','2','3','4','5','6','7','8','9')
 
 # Contains the blocks and their beginning and ending points
@@ -27,6 +27,7 @@ blocks = {1: ((0,0), (2,2)), 2: ((0,3), (2,5)), 3: ((0,6), (2,8)),
           7: ((6,0), (8,2)), 8: ((6,3), (8,5)), 9: ((6,6), (8,8))}
 
 
+# The current state of the game board
 class boardState(object):
     def __init__(self, board):
         self.board = copy.deepcopy(board)
@@ -40,8 +41,10 @@ class boardState(object):
             for col in range(9):
                 if self.board[row][col] == ' ':
                     heapq.heappush( self.variables, sudokuVariable( (row,col), self.board ) )
+# boardState(object)
         
-
+  
+# defines each square on the board
 class sudokuVariable(object):
     def __init__(self, coords, board):
         self.board = board
@@ -59,15 +62,18 @@ class sudokuVariable(object):
             return self.degree >= other.degree # greeater than; bigger degree is better.
         else:
             return self.mrv < other.mrv
+# sudokuVariable(object)
 
 
 def main():
-    board = boardState(sudokuBoard)
+    board = boardState(sudokuBoard1)
     printBoard(board.board)
     backTrackingSearch( board )
     printBoard(board.board)
+# main()
 
 
+# Perform backtracking search on the sudoku puzzle
 def backTrackingSearch( boardState ):
     if isComplete( boardState ):
         return True
@@ -84,14 +90,22 @@ def backTrackingSearch( boardState ):
         undoMove(var, boardState)
 
     return False
+# backTrackingSearch()
 
+
+# make move on sudoku puzzle
 def makeMove(var, boardState):
     boardState.board[var.coords[0]][var.coords[1]] = var.remainingValues[0]
     boardState.updateVars()
+# makeMove()
 
+
+# undo move on sodoku puzzle
 def undoMove(var, boardState):
     boardState.board[var.coords[0]][var.coords[1]] = ' '
     boardState.updateVars()
+# undoMove()
+
 
 # checks board for empty spaces
 def isComplete( boardState ):
@@ -101,8 +115,10 @@ def isComplete( boardState ):
                 return False
 
     return True
+# isComplete()
 
 
+# calculate the degree for a given variable
 def getDegree(var):
     degree = 0
 
@@ -130,13 +146,13 @@ def getDegree(var):
                 degree += 1
 
     return degree
-
-def forwardChecking():
-    pass
+# getDegree()
 
 
+# calculate the block the given coords are in
 def getBlock(coords):
     return ( ( coords[1]//3 ) + 1 ) + ( 3 * (coords[0]//3) )
+# getBlock()
 
 
 # Given a variable and the current board find all of the constraints on it
@@ -148,6 +164,7 @@ def checkConstraints(variable, board):
     final_con = set(blc_con) & set(row_con) & set(col_con) # takes the intersection
 
     variable.remainingValues = list( final_con )
+# checkConstraints()
 
 
 # Checks row for constraint, returns possible values
@@ -161,7 +178,8 @@ def checkRow(variable, board):
             values.append(board[row][i])
 
     return list(set(domain).difference(values)) # list of values "variable" CAN be. 
-        
+# checkRow()
+  
 
 # Checks column for constraints, returns possible values
 def checkCol(variable, board):
@@ -174,6 +192,7 @@ def checkCol(variable, board):
             values.append(board[i][col])
 
     return list(set(domain).difference(values)) # list of values "variable" CAN be.
+# checkCol()
 
 
 # Checks 3X3 block for constraints, returns possible values, ASSUMES given variable is not already assigned a value
@@ -195,6 +214,7 @@ def check3by3(variable, board):
                 values.append( board[i][j] )
 
     return list( set(domain).difference( values ) ) # list of values "variable" CAN be.
+# check3by3()
 
 
 # print the sudoku board
