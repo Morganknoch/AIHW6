@@ -4,19 +4,44 @@
 
 import copy
 import heapq
+import time
 
 # sudokuBoard[row][column]
 sudokuBoard1 = [[' ',' ','1',   ' ',' ','2',   ' ',' ',' '],
-               [' ',' ','5',   ' ',' ','6',   ' ','3',' '],
-               ['4','6',' ',   ' ',' ','5',   ' ',' ',' '],
+                [' ',' ','5',   ' ',' ','6',   ' ','3',' '],
+                ['4','6',' ',   ' ',' ','5',   ' ',' ',' '],
 
-               [' ',' ',' ',   '1',' ','4',   ' ',' ',' '],
-               ['6',' ',' ',   '8',' ',' ',   '1','4','3'],
-               [' ',' ',' ',   ' ','9',' ',   '5',' ','8'],
+                [' ',' ',' ',   '1',' ','4',   ' ',' ',' '],
+                ['6',' ',' ',   '8',' ',' ',   '1','4','3'],
+                [' ',' ',' ',   ' ','9',' ',   '5',' ','8'],
 
-               ['8',' ',' ',   ' ','4','9',   ' ','5',' '],
-               ['1',' ',' ',   '3','2',' ',   ' ',' ',' '],
-               [' ',' ','9',   ' ',' ',' ',   '3',' ',' ']]
+                ['8',' ',' ',   ' ','4','9',   ' ','5',' '],
+                ['1',' ',' ',   '3','2',' ',   ' ',' ',' '],
+                [' ',' ','9',   ' ',' ',' ',   '3',' ',' ']]
+
+sudokuBoard2 = [[' ',' ','5',   ' ','1',' ',   ' ',' ',' '],
+                [' ',' ','2',   ' ',' ','4',   ' ','3',' '],
+                ['1',' ','9',   ' ',' ',' ',   '2',' ','6'],
+
+                ['2',' ',' ',   ' ','3',' ',   ' ',' ',' '],
+                [' ','4',' ',   ' ',' ',' ',   '7',' ',' '],
+                ['5',' ',' ',   ' ',' ','7',   ' ',' ','1'],
+
+                [' ',' ',' ',   '6',' ','3',   ' ',' ',' '],
+                [' ','6',' ',   '1',' ',' ',   ' ',' ',' '],
+                [' ',' ',' ',   ' ','7',' ',   ' ','5',' ']]
+
+sudokuBoard3 = [['6','7',' ',   ' ',' ',' ',   ' ',' ',' '],
+                [' ','2','5',   ' ',' ',' ',   ' ',' ',' '],
+                [' ','9',' ',   '5','6',' ',   '2',' ',' '],
+
+                ['3',' ',' ',   ' ','8',' ',   '9',' ',' '],
+                [' ',' ',' ',   ' ',' ',' ',   '8',' ','1'],
+                [' ',' ',' ',   '4','7',' ',   ' ',' ',' '],
+
+                [' ',' ','8',   '6',' ',' ',   ' ','9',' '],
+                [' ',' ',' ',   ' ',' ',' ',   ' ','1',' '],
+                ['1',' ','6',   ' ','5',' ',   ' ','7',' ']]
 
 # the starting domain for each variable
 domain = ('1','2','3','4','5','6','7','8','9')
@@ -51,7 +76,7 @@ class sudokuVariable(object):
         self.remainingValues = []
         self.coords = coords    # (row,col)
         self.block = getBlock(coords)
-        checkConstraints(self, self.board)
+        checkConstraints(self, self.board)  # forward checking
         self.mrv = len(self.remainingValues)
         self.degree = getDegree(self)
 
@@ -66,10 +91,20 @@ class sudokuVariable(object):
 
 
 def main():
-    board = boardState(sudokuBoard1)
+    board = boardState(sudokuBoard2)
     printBoard(board.board)
-    backTrackingSearch( board )
-    printBoard(board.board)
+
+    start_time = time.time()
+    result = backTrackingSearch( board )
+    end_time = time.time() - start_time
+    end_time *= 1000                # Convert time in seconds to milliseconds
+
+    if result:
+        printBoard(board.board)
+    else:
+        print("\nCould not find solution!\n")
+
+    print("\nCPU execution time: " + str(end_time) + " ms")
 # main()
 
 
@@ -155,7 +190,7 @@ def getBlock(coords):
 # getBlock()
 
 
-# Given a variable and the current board find all of the constraints on it
+# Given a variable and the current board find all of the valid values for it
 def checkConstraints(variable, board):
     row_con = checkRow( variable, board )
     col_con = checkCol( variable, board )
