@@ -51,6 +51,18 @@ blocks = {1: ((0,0), (2,2)), 2: ((0,3), (2,5)), 3: ((0,6), (2,8)),
           4: ((3,0), (5,2)), 5: ((3,3), (5,5)), 6: ((3,6), (5,8)),
           7: ((6,0), (8,2)), 8: ((6,3), (8,5)), 9: ((6,6), (8,8))}
 
+# Global variables to hold the boards for webpage
+board1=None
+board2=None
+board3=None
+board4=None
+
+# Global variable for compute time
+computeTime=0
+
+#Global variable to hold variables
+countOfVars = 0
+firstThreeVars = []
 
 # The current state of the game board
 class boardState(object):
@@ -91,6 +103,7 @@ class sudokuVariable(object):
 
 
 def main():
+    global firstThreeVars, countOfVars
     # board 1
     print( "\nBoard 1:")
     board = boardState(sudokuBoard1)
@@ -106,6 +119,12 @@ def main():
         printBoard(board.board)
     else:
         print("\nCould not find solution!\n")
+
+    print("The first chosen variable was " + str(firstThreeVars[0].coords) + " and its domain size was " + str(firstThreeVars[0].mrv) + " and its degree was " + str(firstThreeVars[0].degree))
+    print("The second chosen variable was " + str(firstThreeVars[1].coords) + " and its domain size was " + str(firstThreeVars[1].mrv) + " and its degree was " + str(firstThreeVars[1].degree))
+    print("The third chosen variable was " + str(firstThreeVars[2].coords) + " and its domain size was " + str(firstThreeVars[2].mrv) + " and its degree was " + str(firstThreeVars[2].degree))
+    countOfVars = 0
+    firstThreeVars = []
 
     print("\nCPU execution time: " + str(end_time) + " ms")
 
@@ -125,6 +144,12 @@ def main():
     else:
         print("\nCould not find solution!")
 
+    print("The first chosen variable was " + str(firstThreeVars[0].coords) + " and its domain size was " + str(firstThreeVars[0].mrv) + " and its degree was " + str(firstThreeVars[0].degree))
+    print("The second chosen variable was " + str(firstThreeVars[1].coords) + " and its domain size was " + str(firstThreeVars[1].mrv) + " and its degree was " + str(firstThreeVars[1].degree))
+    print("The third chosen variable was " + str(firstThreeVars[2].coords) + " and its domain size was " + str(firstThreeVars[2].mrv) + " and its degree was " + str(firstThreeVars[2].degree))
+    countOfVars = 0
+    firstThreeVars = []
+
     print("\nCPU execution time: " + str(end_time) + " ms")
 
     # board 3
@@ -143,16 +168,30 @@ def main():
     else:
         print("\nCould not find solution!")
 
+    print("The first chosen variable was " + str(firstThreeVars[0].coords) + " and its domain size was " + str(firstThreeVars[0].mrv) + " and its degree was " + str(firstThreeVars[0].degree))
+    print("The second chosen variable was " + str(firstThreeVars[1].coords) + " and its domain size was " + str(firstThreeVars[1].mrv) + " and its degree was " + str(firstThreeVars[1].degree))
+    print("The third chosen variable was " + str(firstThreeVars[2].coords) + " and its domain size was " + str(firstThreeVars[2].mrv) + " and its degree was " + str(firstThreeVars[2].degree))
+    countOfVars = 0
+    firstThreeVars = []
+
     print("\nCPU execution time: " + str(end_time) + " ms")
 # main()
 
 
 # Perform backtracking search on the sudoku puzzle
 def backTrackingSearch( boardState ):
+
+    global firstThreeVars, countOfVars    
+
     if isComplete( boardState ):
         return True
 
     var = heapq.heappop( boardState.variables )
+
+    if countOfVars < 3:
+       hold = copy.deepcopy(var)
+       firstThreeVars.append(hold)
+       countOfVars += 1
 
     for value in var.remainingValues:
         makeMove(var, boardState, value)
@@ -364,4 +403,166 @@ def printBoard( board ):
 # printBoard()
 
 # Call Main
-main()
+#main()
+
+
+
+
+from flask import Flask, render_template, request, redirect
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    global board1, board2, board3, board4, countOfVars, firstThreeVars, computeTime
+    if board1:
+        hold = render_template('index.html', first=sudokuBoard1, second=sudokuBoard2, third=sudokuBoard3, board1=board1.board, firstThreeVars = firstThreeVars, computeTime=computeTime )
+        board1 = None
+        countOfVars = 0
+        firstThreeVars = []
+        computeTime = 0
+        return hold
+    if board2:
+        hold = render_template('index.html', first=sudokuBoard1, second=sudokuBoard2, third=sudokuBoard3, board2=board2.board, firstThreeVars = firstThreeVars, computeTime=computeTime )
+        board2 = None
+        countOfVars = 0
+        firstThreeVars = []
+        computeTime = 0
+        return hold
+    if board3:
+        hold = render_template('index.html', first=sudokuBoard1, second=sudokuBoard2, third=sudokuBoard3, board3=board3.board, firstThreeVars = firstThreeVars, computeTime=computeTime )
+        board3 = None
+        countOfVars = 0
+        firstThreeVars = []
+        computeTime = 0
+        return hold
+    if board4:
+        hold = render_template('index.html', first=sudokuBoard1, second=sudokuBoard2, third=sudokuBoard3, board4=board4.board, firstThreeVars = firstThreeVars, computeTime=computeTime )
+        board4 = None
+        countOfVars = 0
+        firstThreeVars = []
+        computeTime = 0
+        return hold
+
+    return render_template('index.html', first=sudokuBoard1, second=sudokuBoard2, third=sudokuBoard3 )
+
+@app.route('/first', methods = ['POST'])
+def firstSolution():
+    global board1, computeTime
+    print( "\nBoard 1:")
+    board = boardState(sudokuBoard1)
+    printBoard(board.board)
+
+    start_time = time.time()
+    result = backTrackingSearch( board )
+    end_time = time.time() - start_time
+    end_time *= 1000                # Convert time in seconds to milliseconds
+
+    if result:
+        print( "\nBoard 1 solution:")
+        printBoard(board.board)
+    else:
+        print("\nCould not find solution!\n")
+
+    print("\nCPU execution time: " + str(end_time) + " ms")
+
+    computeTime = end_time
+
+    board1 = board
+    return redirect('/')
+
+@app.route('/second', methods = ['POST'])
+def secondSolution():
+    global board2, computeTime
+    print( "\nBoard 2:")
+    board = boardState(sudokuBoard2)
+    printBoard(board.board)
+
+    start_time = time.time()
+    result = backTrackingSearch( board )
+    end_time = time.time() - start_time
+    end_time *= 1000                # Convert time in seconds to milliseconds
+
+    if result:
+        print( "\nBoard 2 solution:")
+        printBoard(board.board)
+    else:
+        print("\nCould not find solution!\n")
+
+    print("\nCPU execution time: " + str(end_time) + " ms")
+
+    computeTime = end_time
+
+    board2 = board
+    return redirect('/')
+
+@app.route('/third', methods = ['POST'])
+def thirdSolution():
+    global board3, computeTime
+    print( "\nBoard 3:")
+    board = boardState(sudokuBoard3)
+    printBoard(board.board)
+
+    start_time = time.time()
+    result = backTrackingSearch( board )
+    end_time = time.time() - start_time
+    end_time *= 1000                # Convert time in seconds to milliseconds
+
+    if result:
+        print( "\nBoard 3 solution:")
+        printBoard(board.board)
+    else:
+        print("\nCould not find solution!\n")
+
+    print("\nCPU execution time: " + str(end_time) + " ms")
+
+    computeTime = end_time
+    
+    board3 = board
+    return redirect('/')
+
+@app.route('/fourth', methods = ['POST'])
+def fourthSolution():
+    global board4, computeTime
+    print( "\nBoard 4:")
+
+    sudokuBoard4 = []
+    for a in range(0,9):
+        x = []
+        for b in range(0,9):
+            string = 'input' + str(a) + str(b)
+            hold = request.form[string]
+            
+            if hold.isdigit():
+                pass
+            else:
+                hold = ' '
+
+            x.append(hold)
+
+        sudokuBoard4.append(x)
+
+
+    board = boardState(sudokuBoard4)  
+    printBoard(board.board)
+
+    start_time = time.time()
+    result = backTrackingSearch( board )
+    end_time = time.time() - start_time
+    end_time *= 1000                # Convert time in seconds to milliseconds
+
+    if result:
+        print( "\nBoard 4 solution:")
+        printBoard(board.board)
+    else:
+        print("\nCould not find solution!\n")
+
+    print("\nCPU execution time: " + str(end_time) + " ms")
+
+    computeTime = end_time
+
+    board4 = board
+    return redirect('/')
+
+
+if __name__ == '__main__':
+    app.run()

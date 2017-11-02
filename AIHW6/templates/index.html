@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Artificial Intelligence HW #6</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link href="styles/main.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="row">
+       
+        <div class="col-md-4" >
+            <h2 style="margin:10px">Number One</h2>
+            <form action="first" method="post" style="margin:10px">
+                <table border="1" style="width:33%">
+                    {% for x in first %}
+                    <tr>
+                        {% for i in x %}
+                            {% if i == ' '%}
+                                <td>&nbsp;&nbsp;&nbsp;</td>
+                            {% else %}
+                                <td>{{i}}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+                <input type="submit" value="Find Solution">
+                <br />
+                {% if board1 %}
+                <table border="1" style="width:33%">
+                    {% for x in board1 %}
+                    <tr>
+                        {% for i in x %}
+                        {% if i == ' '%}
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        {% else %}
+                        <td> {{ i }} </td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <p>The compute time was {{computeTime}} ms</p>
+                <p>The first chosen variable was {{firstThreeVars[0].coords}} and its domain size was {{firstThreeVars[0].mrv}} and its degree was {{firstThreeVars[0].degree}}</p>
+                <p>The second chosen variable was {{firstThreeVars[1].coords}} and its domain size was {{firstThreeVars[1].mrv}} and its degree was {{firstThreeVars[1].degree}}</p>
+                <p>The third chosen variable was {{firstThreeVars[2].coords}} and its domain size was {{firstThreeVars[2].mrv}} and its degree was {{firstThreeVars[2].degree}}</p>
+
+                {% endif %}
+
+
+            </form>
+        </div>
+        <div class="col-md-4">
+            <h2 style="margin:10px">Number Two</h2>
+            <form action="second" method="post" style="margin:10px">
+                <table border="1" style="width:33%">
+                    {% for x in second %}
+                    <tr>
+                        {% for i in x %}
+                        {% if i == ' '%}
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        {% else %}
+                        <td>{{i}}</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <input type="submit" value="Find Solution">
+                <br />
+                {% if board2 %}
+                <table border="1" style="width:33%">
+                    {% for x in board2 %}
+                    <tr>
+                        {% for i in x %}
+                        {% if i == ' '%}
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        {% else %}
+                        <td> {{ i }} </td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <p>The compute time was {{computeTime}} ms</p>
+                <p>The first chosen variable was {{firstThreeVars[0].coords}} and its domain size was {{firstThreeVars[0].mrv}} and its degree was {{firstThreeVars[0].degree}}</p>
+                <p>The second chosen variable was {{firstThreeVars[1].coords}} and its domain size was {{firstThreeVars[1].mrv}} and its degree was {{firstThreeVars[1].degree}}</p>
+                <p>The third chosen variable was {{firstThreeVars[2].coords}} and its domain size was {{firstThreeVars[2].mrv}} and its degree was {{firstThreeVars[2].degree}}</p>
+
+                {% endif %}
+            </form>
+        </div>
+
+        <div class="col-md-4" >
+            <h2 style="margin:10px">Number Three</h2>
+            <form action="third" method="post" style="margin:10px">
+                <table border="1" style="width:33%">
+                    {% for x in third %}
+                    <tr>
+                        {% for i in x %}
+                        {% if i == ' '%}
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        {% else %}
+                        <td>{{i}}</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <input type="submit" value="Find Solution">
+                <br />
+                {% if board3 %}
+                <table border="1" style="width:33%">
+                    {% for x in board3 %}
+                    <tr>
+                        {% for i in x %}
+                        {% if i == ' '%}
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        {% else %}
+                        <td> {{ i }} </td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <p>The compute time was {{computeTime}} ms</p>
+                <p>The first chosen variable was {{firstThreeVars[0].coords}} and its domain size was {{firstThreeVars[0].mrv}} and its degree was {{firstThreeVars[0].degree}}</p>
+                <p>The second chosen variable was {{firstThreeVars[1].coords}} and its domain size was {{firstThreeVars[1].mrv}} and its degree was {{firstThreeVars[1].degree}}</p>
+                <p>The third chosen variable was {{firstThreeVars[2].coords}} and its domain size was {{firstThreeVars[2].mrv}} and its degree was {{firstThreeVars[2].degree}}</p>
+
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4" >
+            <h2 style="margin:10px">Enter your own</h2>
+            <form action="fourth" method="post" style="margin:10px">
+                <table border="1" style="width:10%">
+                    {% for x in range(0,9) %}
+                    <tr>
+                        {% for i in range(0,9) %}
+
+                        <td><input type="text" name="input{{x}}{{i}}" style="width:20px"/></td>
+
+
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <input type="submit" value="Find Solution">
+                <br />
+                {% if board4 %}
+                <table border="1" style="width:200px">
+                    {% for x in board4 %}
+                    <tr>
+                        {% for i in x %}
+                        {% if i == ' '%}
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        {% else %}
+                        <td> {{ i }} </td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <p>The compute time was {{computeTime}} ms</p>
+                <p>The first chosen variable was {{firstThreeVars[0].coords}} and its domain size was {{firstThreeVars[0].mrv}} and its degree was {{firstThreeVars[0].degree}}</p>
+                <p>The second chosen variable was {{firstThreeVars[1].coords}} and its domain size was {{firstThreeVars[1].mrv}} and its degree was {{firstThreeVars[1].degree}}</p>
+                <p>The third chosen variable was {{firstThreeVars[2].coords}} and its domain size was {{firstThreeVars[2].mrv}} and its degree was {{firstThreeVars[2].degree}}</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>
