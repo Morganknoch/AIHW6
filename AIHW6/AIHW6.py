@@ -88,7 +88,7 @@ class sudokuVariable(object):
         self.remainingValues = []
         self.coords = coords    # (row,col)
         self.block = getBlock(coords)
-        checkConstraints(self, self.board)  # forward checking
+        checkConstraints(self, self.board)  # forward checking; populates remainingValues[] list.
         self.mrv = len(self.remainingValues)
         self.degree = getDegree(self)
 
@@ -216,7 +216,6 @@ def makeMove(var, boardState, value):
 # undo move on sodoku puzzle
 def undoMove(var, boardState):
     boardState.board[var.coords[0]][var.coords[1]] = ' '
-    boardState.updateVars()
 # undoMove()
 
 
